@@ -29,8 +29,8 @@ tpkta(트프크터)(Translate Program used by Kakao Translate Api)
 ❌0.9 publish
 
 issue:
- 1. Selecting the same language in the first choice will be "keyError"
- Solution -> Insert the same language discrimination if statement
+ 1. (conplete)Selecting the same language in the first choice will be "keyError"
+ Solution -> Insert the same language discrimination if statement🎉
 
 
               🔨제작자의 이메일 주소
@@ -45,70 +45,82 @@ import sys
 import ocr
 import translate
 import requests
-choice_lang=["kr",'en','jp','cn','vi','id','ar','bn','de','es','fr','hi','it','ms','pt','ru','th','tr']
-B_lang="kr"
-#funtion part
+choice_lang = ["kr", 'en', 'jp', 'cn', 'vi', 'id', 'ar', 'bn',
+               'de', 'es', 'fr', 'hi', 'it', 'ms', 'pt', 'ru', 'th', 'tr']
+B_lang = "kr"
+# funtion part
+
+
 def settingwriter(lang):
     """
     이 함수는 언어를 입력하여 setting.txt 에 쓰고 저장합니다
-    
+
     """
-    with open("setting.txt",'w+') as file:
+    with open("setting.txt", 'w+') as file:
         file.write("lang:"+str(lang))
-        
+
+
 def settingchange():
     """
     이함수는 setting.txt 에서 설정을 읽어온 다음엔 B_lang(결과 언어)를 설정값으로 바꿉니다.
     """
     global B_lang
     if(os.path.isfile("setting.txt")):
-        with open('setting.txt','r')as file:
-            a=file.readline()
-            a=a.split(":")[1]
-            B_lang=a
+        with open('setting.txt', 'r')as file:
+            a = file.readline()
+            a = a.split(":")[1]
+            B_lang = a
+            return a
     else:
         return
-def translaterFromApi(src_lang:str,target_lang:str,query:str) -> str:
-  """
-  이 함수는 kakao Translate api을 사용하여 query(입력값)과 src_lang(입력값의 언어)를 
-  target_lang(결과 언어)로 변역합니다
-      이 api는 총 18개의 언어를 지원합니다 자세한사항은 https://developers.kakao.com/docs/latest/ko/translate/common#language 을 보세요.
-    
-  """
-  headers = {
-      'Authorization': 'KakaoAK ddd8494e7e3ce31d9effa2e31be15646',
-  }
-  
-  params = (
-      ('src_lang', src_lang),
-      ('target_lang', target_lang),
-      ('query', query),
-  )
-  
-  response = requests.get('https://dapi.kakao.com/v2/translation/translate', headers=headers, params=params).json()
-  response=response["translated_text"][0][0]
-  return response
-    
+
+
+def translaterFromApi(src_lang: str, target_lang: str, query: str) -> str:
+    """
+    이 함수는 kakao Translate api을 사용하여 query(입력값)과 src_lang(입력값의 언어)를 
+    target_lang(결과 언어)로 변역합니다
+        이 api는 총 18개의 언어를 지원합니다 자세한사항은 https://developers.kakao.com/docs/latest/ko/translate/common#language 을 보세요.
+
+    """
+    headers = {
+        'Authorization': 'KakaoAK ddd8494e7e3ce31d9effa2e31be15646',
+    }
+
+    params = (
+        ('src_lang', src_lang),
+        ('target_lang', target_lang),
+        ('query', query),
+    )
+
+    response = requests.get(
+        'https://dapi.kakao.com/v2/translation/translate', headers=headers, params=params).json()
+    response = response["translated_text"][0][0]
+    return response
+
+
 def detect_lang(words):
-  """
-  이함수는 kakao language detect api을 이영하여 word(입력값)의 언어가 무었인지 알려줍니다.
-  이 api는 총 18개의 언어를 지원합니다 자세한사항은 https://developers.kakao.com/docs/latest/ko/translate/common#language 을 보세요.
-    
-  """
-  import requests
-  
-  headers = {
-      'Authorization': 'KakaoAK ddd8494e7e3ce31d9effa2e31be15646',
-  }
-  
-  params = (
-      ('query', words),
-  )
-  
-  response = requests.get('https://dapi.kakao.com/v3/translation/language/detect', headers=headers, params=params).json()
-  response=response['language_info'][0]['code']
-  return response
-#Main part
+    """
+    이함수는 kakao language detect api을 이영하여 word(입력값)의 언어가 무었인지 알려줍니다.
+    이 api는 총 18개의 언어를 지원합니다 자세한사항은 https://developers.kakao.com/docs/latest/ko/translate/common#language 을 보세요.
+
+    """
+    import requests
+
+    headers = {
+        'Authorization': 'KakaoAK ddd8494e7e3ce31d9effa2e31be15646',
+    }
+
+    params = (
+        ('query', words),
+    )
+
+    response = requests.get(
+        'https://dapi.kakao.com/v3/translation/language/detect', headers=headers, params=params).json()
+    response = response['language_info'][0]['code']
+    return response
+
+
+# Main part
 settingchange()
 a = ocr.trans("ddd8494e7e3ce31d9effa2e31be15646")
 
@@ -128,23 +140,28 @@ while True:
         user_input = int(input("다음중 하나를 고르세요 : "))
     except ValueError:
         print("다시 입력하세요")
-        user_input=0
-    if user_input == 1: # 1 번째 선택지
+        user_input = 0
+    if user_input == 1:  # 1 번째 선택지
         print("-" * 100)
         print("일반변역를 선택했습니다.")
         print("변역할 문장을 입력하세요")
         user_input = input("문장을 입력하세요 : ")
-        print(translaterFromApi(detect_lang(user_input),B_lang,user_input))
-    elif user_input==2:# 2 번째 선택지
+
+        if detect_lang(user_input) != B_lang:
+            print(translaterFromApi(detect_lang(user_input), B_lang, user_input))
+        else:
+            print("Error E01")
+    elif user_input == 2:  # 2 번째 선택지
         print("-"*100)
         print("파일 경로를 입력하세요")
         print('파일 경로들⤵')
-        for i,j in enumerate(os.listdir("./")):
-            print('{}. {}'.format(i+1,j))
-        user_input=int(input("(여기에 나와있는 파일 목록중에서 하나를 고르시오)->"))
-        user_input=os.listdir("./")[user_input-1]
-        a.getImageAndTranslate(user_input,"ddd8494e7e3ce31d9effa2e31be15646",B_lang)
-    elif user_input==3:# 3 번째 선택지
+        for i, j in enumerate(os.listdir("./")):
+            print('{}. {}'.format(i+1, j))
+        user_input = int(input("(여기에 나와있는 파일 목록중에서 하나를 고르시오)->"))
+        user_input = os.listdir("./")[user_input-1]
+        a.getImageAndTranslate(
+            user_input, "ddd8494e7e3ce31d9effa2e31be15646", B_lang)
+    elif user_input == 3:  # 3 번째 선택지
         print("-"*100)
         print("결과 문장 언어를 선택합니다")
         print("1.한국어 2.영어 3.일본어 4.중국어")
@@ -155,12 +172,11 @@ while True:
         try:
             user_input = int(input("다음중 하나를 고르세요 : "))
             print("설정이 잘 적용이 될려면 이 프로그램을 다시 시작 하세요")
-            B_lang=choice_lang[user_input-1]
+            B_lang = choice_lang[user_input-1]
             settingwriter(B_lang)
         except ValueError:
             print("다시 입력하세요")
-            user_input=0
-        
-    elif user_input==4:# 4 번째 선택지
-        sys.exit()    
-        
+            user_input = 0
+
+    elif user_input == 4:  # 4 번째 선택지
+        sys.exit()
