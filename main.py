@@ -42,7 +42,10 @@ __________________________________________________
 # import part
 import os
 import sys
+import recoder
+from matplotlib.pyplot import flag
 import ocr
+import sttRequest
 import translate
 import requests
 choice_lang = ["kr", 'en', 'jp', 'cn', 'vi', 'id', 'ar', 'bn',
@@ -121,62 +124,132 @@ def detect_lang(words):
 
 
 # Main part
+
 settingchange()
+Recoder = recoder.recoder()
 a = ocr.trans("ddd8494e7e3ce31d9effa2e31be15646")
-
-while True:
-    print("-"*100)
-    print(" _____                           _         _         ")
-    print("|_   _|                         | |       | |        ")
-    print("  | |   _ __   __ _  _ __   ___ | |  __ _ | |_   ___ ")
-    print("  | |  | '__| / _` || '_ \ / __|| | / _` || __| / _ \\")
-    print("  | |  | |   | (_| || | | |\__ \| || (_| || |_ |  __/")
-    print("  |_|  |_|    \__,_||_| |_||___/|_| \__,_| \__| \___|")
-    print("1. 일반 변역")
-    print("2. 사진 변역")
-    print("3. 설정")
-    print("4. 나가기")
-    try:
-        user_input = int(input("다음중 하나를 고르세요 : "))
-    except ValueError:
-        print("다시 입력하세요")
-        user_input = 0
-    if user_input == 1:  # 1 번째 선택지
-        print("-" * 100)
-        print("일반변역를 선택했습니다.")
-        print("변역할 문장을 입력하세요")
-        user_input = input("문장을 입력하세요 : ")
-
-        if detect_lang(user_input) != B_lang:
-            print(translaterFromApi(detect_lang(user_input), B_lang, user_input))
-        else:
-            print("Error E01")
-    elif user_input == 2:  # 2 번째 선택지
+b = sttRequest.sttRequester()
+flag = False
+if(Recoder.IsSupport):
+    while True:
         print("-"*100)
-        print("파일 경로를 입력하세요")
-        print('파일 경로들⤵')
-        for i, j in enumerate(os.listdir("./")):
-            print('{}. {}'.format(i+1, j))
-        user_input = int(input("(여기에 나와있는 파일 목록중에서 하나를 고르시오)->"))
-        user_input = os.listdir("./")[user_input-1]
-        a.getImageAndTranslate(
-            user_input, "ddd8494e7e3ce31d9effa2e31be15646", B_lang)
-    elif user_input == 3:  # 3 번째 선택지
-        print("-"*100)
-        print("결과 문장 언어를 선택합니다")
-        print("1.한국어 2.영어 3.일본어 4.중국어")
-        print("5.베트남어 6.인도네시아어 7.아랍어 8.뱅갈어")
-        print("9.독일어 10.스페인어 11.프랑스어 12.힌디어")
-        print("13.아탈리아어 14.말레이시아어 15.네덜란드어 16.포르투갈어")
-        print("17.러시아어 18.태국어 19.터키어")
+        print(" _____                           _         _         ")
+        print("|_   _|                         | |       | |        ")
+        print("  | |   _ __   __ _  _ __   ___ | |  __ _ | |_   ___ ")
+        print("  | |  | '__| / _` || '_ \ / __|| | / _` || __| / _ \\")
+        print("  | |  | |   | (_| || | | |\__ \| || (_| || |_ |  __/")
+        print("  |_|  |_|    \__,_||_| |_||___/|_| \__,_| \__| \___|")
+        print("1. 일반 변역")
+        print("2. 사진 변역")
+        print("3. 설정")
+        print("4. 음성 변역")
+        print("5. 나가기")
         try:
             user_input = int(input("다음중 하나를 고르세요 : "))
-            print("설정이 잘 적용이 될려면 이 프로그램을 다시 시작 하세요")
-            B_lang = choice_lang[user_input-1]
-            settingwriter(B_lang)
         except ValueError:
             print("다시 입력하세요")
             user_input = 0
+        if user_input == 1:  # 1 번째 선택지
+            print("-" * 100)
+            print("일반변역를 선택했습니다.")
+            print("변역할 문장을 입력하세요")
+            user_input = input("문장을 입력하세요 : ")
 
-    elif user_input == 4:  # 4 번째 선택지
-        sys.exit()
+            if detect_lang(user_input) != B_lang:
+                print(translaterFromApi(detect_lang(
+                    user_input), B_lang, user_input))
+            else:
+                print("Error E01")
+        elif user_input == 2:  # 2 번째 선택지
+            print("-"*100)
+            print("파일 경로를 입력하세요")
+            print('파일 경로들⤵')
+            for i, j in enumerate(os.listdir("./")):
+                print('{}. {}'.format(i+1, j))
+            user_input = int(input("(여기에 나와있는 파일 목록중에서 하나를 고르시오)->"))
+            user_input = os.listdir("./")[user_input-1]
+            a.getImageAndTranslate(
+                user_input, "ddd8494e7e3ce31d9effa2e31be15646", B_lang)
+        elif user_input == 3:  # 3 번째 선택지
+            print("-"*100)
+            print("결과 문장 언어를 선택합니다")
+            print("1.한국어 2.영어 3.일본어 4.중국어")
+            print("5.베트남어 6.인도네시아어 7.아랍어 8.뱅갈어")
+            print("9.독일어 10.스페인어 11.프랑스어 12.힌디어")
+            print("13.아탈리아어 14.말레이시아어 15.네덜란드어 16.포르투갈어")
+            print("17.러시아어 18.태국어 19.터키어")
+            try:
+                user_input = int(input("다음중 하나를 고르세요 : "))
+                print("설정이 잘 적용이 될려면 이 프로그램을 다시 시작 하세요")
+                B_lang = choice_lang[user_input-1]
+                settingwriter(B_lang)
+            except ValueError:
+                print("다시 입력하세요")
+                user_input = 0
+
+        elif user_input == 4:  # 4 번째 선택지
+
+            Recoder.recoder()
+            audio = b.sttRequester(
+                'ddd8494e7e3ce31d9effa2e31be15646', 'output.wav')
+            print(audio)
+            print(translaterFromApi(detect_lang(
+                audio), B_lang, audio))
+            if(audio == "E03"):
+                print("가까이서 말헤보세요")
+else:
+    while True:
+        print("당신의 기본 마이크가 조건에 부합하지 않습니다 조건을 보고 이용하시오 \n만약 마이크성능이 부합하면 마이크를 기본마이크로 바꾸시오")
+        print("-"*100)
+        print(" _____                           _         _         ")
+        print("|_   _|                         | |       | |        ")
+        print("  | |   _ __   __ _  _ __   ___ | |  __ _ | |_   ___ ")
+        print("  | |  | '__| / _` || '_ \ / __|| | / _` || __| / _ \\")
+        print("  | |  | |   | (_| || | | |\__ \| || (_| || |_ |  __/")
+        print("  |_|  |_|    \__,_||_| |_||___/|_| \__,_| \__| \___|")
+        print("1. 일반 변역")
+        print("2. 사진 변역")
+        print("3. 설정")
+        print("4. 나가기")
+        try:
+            user_input = int(input("다음중 하나를 고르세요 : "))
+        except ValueError:
+            print("다시 입력하세요")
+            user_input = 0
+        if user_input == 1:  # 1 번째 선택지
+            print("-" * 100)
+            print("일반변역를 선택했습니다.")
+            print("변역할 문장을 입력하세요")
+            user_input = input("문장을 입력하세요 : ")
+
+            if detect_lang(user_input) != B_lang:
+                print(translaterFromApi(detect_lang(
+                    user_input), B_lang, user_input))
+            else:
+                print("Error E01")
+        elif user_input == 2:  # 2 번째 선택지
+            print("-"*100)
+            print("파일 경로를 입력하세요")
+            print('파일 경로들⤵')
+            for i, j in enumerate(os.listdir("./")):
+                print('{}. {}'.format(i+1, j))
+            user_input = int(input("(여기에 나와있는 파일 목록중에서 하나를 고르시오)->"))
+            user_input = os.listdir("./")[user_input-1]
+            a.getImageAndTranslate(
+                user_input, "ddd8494e7e3ce31d9effa2e31be15646", B_lang)
+        elif user_input == 3:  # 3 번째 선택지
+            print("-"*100)
+            print("결과 문장 언어를 선택합니다")
+            print("1.한국어 2.영어 3.일본어 4.중국어")
+            print("5.베트남어 6.인도네시아어 7.아랍어 8.뱅갈어")
+            print("9.독일어 10.스페인어 11.프랑스어 12.힌디어")
+            print("13.아탈리아어 14.말레이시아어 15.네덜란드어 16.포르투갈어")
+            print("17.러시아어 18.태국어 19.터키어")
+            try:
+                user_input = int(input("다음중 하나를 고르세요 : "))
+                print("설정이 잘 적용이 될려면 이 프로그램을 다시 시작 하세요")
+                B_lang = choice_lang[user_input-1]
+                settingwriter(B_lang)
+            except ValueError:
+                print("다시 입력하세요")
+                user_input = 0

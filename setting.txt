@@ -1,1 +1,1 @@
-lang:jp
+lang:id
