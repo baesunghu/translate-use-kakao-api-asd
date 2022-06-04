@@ -40,6 +40,7 @@ __________________________________________________
 도움을 주신 여러분 감사합니다!!
 """
 # import part
+import config
 import os
 import sys
 import recoder
@@ -48,6 +49,7 @@ import ocr
 import sttRequest
 import translate
 import requests
+secrit_key = config.secrit_key
 choice_lang = ["kr", 'en', 'jp', 'cn', 'vi', 'id', 'ar', 'bn',
                'de', 'es', 'fr', 'hi', 'it', 'ms', 'pt', 'ru', 'th', 'tr']
 B_lang = "kr"
@@ -86,7 +88,7 @@ def translaterFromApi(src_lang: str, target_lang: str, query: str) -> str:
 
     """
     headers = {
-        'Authorization': 'KakaoAK ddd8494e7e3ce31d9effa2e31be15646',
+        'Authorization': 'KakaoAK ' + secrit_key,
     }
 
     params = (
@@ -110,7 +112,7 @@ def detect_lang(words):
     import requests
 
     headers = {
-        'Authorization': 'KakaoAK ddd8494e7e3ce31d9effa2e31be15646',
+        'Authorization': 'KakaoAK '+secrit_key,
     }
 
     params = (
@@ -127,7 +129,7 @@ def detect_lang(words):
 
 settingchange()
 Recoder = recoder.recoder()
-a = ocr.trans("ddd8494e7e3ce31d9effa2e31be15646")
+a = ocr.trans(secrit_key)
 b = sttRequest.sttRequester()
 quit_list = ["q", 'Q', "'q'", "'Q'"]
 supportList = [".jpg", '.png', ]
@@ -178,7 +180,7 @@ if(Recoder.IsSupport):
                     user_input = int(user_input)
                     user_input = os.listdir("./")[user_input-1]
                     a.getImageAndTranslate(
-                        user_input, "ddd8494e7e3ce31d9effa2e31be15646", B_lang)
+                        user_input, secrit_key, B_lang)
                 elif user_input in quit_list:
                     break
                 else:
@@ -197,15 +199,15 @@ if(Recoder.IsSupport):
             print("-"*100)
             print(("_"*100))
             print("|9.독일어 | 10.스페인어 |11.프랑스어 | 12.힌디어|")
-            print(("-"*100).center(150, " "))
-            print(("_"*100).center(150, " "))
-            print("|13.아탈리아어 | 14.말레이시아어 |15.네덜란드어 | 16.포르투갈어|".center(150, ' '))
-            print(("-"*100).center(150, " "))
-            print(("_"*100).center(150, " "))
-            print("|17.러시아어 | 18.태국어 | 19.터키어|".center(150, ' '))
-            print(("_"*100).center(150, " "))
+            print(("-"*100))
+            print(("_"*100))
+            print("|13.아탈리아어 | 14.말레이시아어 |15.네덜란드어 | 16.포르투갈어|")
+            print(("-"*100))
+            print(("_"*100))
+            print("|17.러시아어 | 18.태국어 | 19.터키어|")
+            print(("_"*100))
             try:
-                user_input = int(input("다음중 하나를 고르세요 : ".center(150, ' ')))
+                user_input = int(input("다음중 하나를 고르세요 : "))
                 print("설정이 잘 적용이 될려면 이 프로그램을 다시 시작 하세요")
                 B_lang = choice_lang[user_input-1]
                 settingwriter(B_lang)
@@ -217,12 +219,14 @@ if(Recoder.IsSupport):
 
             Recoder.recoder()
             audio = b.sttRequester(
-                'ddd8494e7e3ce31d9effa2e31be15646', 'output.wav')
+                secrit_key, 'output.wav')
             print(audio)
             print(translaterFromApi(detect_lang(
                 audio), B_lang, audio))
             if(audio == "E03"):
                 print("가까이서 말헤보세요")
+        elif user_input == 5:  # 5 번째 선택지
+            quit()
 else:
     while True:
         print(
@@ -263,7 +267,7 @@ else:
             user_input = int(input("(여기에 나와있는 파일 목록중에서 하나를 고르시오)->"))
             user_input = os.listdir("./")[user_input-1]
             a.getImageAndTranslate(
-                user_input, "ddd8494e7e3ce31d9effa2e31be15646", B_lang)
+                user_input, secrit_key, B_lang)
         elif user_input == 3:  # 3 번째 선택지
             print("-"*100)
             print("결과 문장 언어를 선택합니다")
@@ -280,3 +284,5 @@ else:
             except ValueError:
                 print("다시 입력하세요")
                 user_input = 0
+        elif user_input == 4:  # 4 번째 선택지
+            quit()
