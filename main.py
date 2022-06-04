@@ -129,9 +129,12 @@ settingchange()
 Recoder = recoder.recoder()
 a = ocr.trans("ddd8494e7e3ce31d9effa2e31be15646")
 b = sttRequest.sttRequester()
+quit_list = ["q", 'Q', "'q'", "'Q'"]
+supportList = [".jpg", '.png', ]
 flag = False
 if(Recoder.IsSupport):
     while True:
+        print("음성 변역은 한국어만 지원 됩니다.")
         print("-"*100)
         print(" _____                           _         _         ")
         print("|_   _|                         | |       | |        ")
@@ -161,25 +164,48 @@ if(Recoder.IsSupport):
             else:
                 print("Error E01")
         elif user_input == 2:  # 2 번째 선택지
-            print("-"*100)
-            print("파일 경로를 입력하세요")
-            print('파일 경로들⤵')
-            for i, j in enumerate(os.listdir("./")):
-                print('{}. {}'.format(i+1, j))
-            user_input = int(input("(여기에 나와있는 파일 목록중에서 하나를 고르시오)->"))
-            user_input = os.listdir("./")[user_input-1]
-            a.getImageAndTranslate(
-                user_input, "ddd8494e7e3ce31d9effa2e31be15646", B_lang)
+            while True:
+                print("-"*100)
+                print("파일 경로를 입력하세요")
+                print("여기에서 나갈려면 'q' 를 누르세요")
+                print('파일 경로들⤵')
+                for i, j in enumerate(os.listdir("./")):
+                    print('{}. {}'.format(i+1, j))
+
+                user_input = str(input("(여기에 나와있는 파일 목록중에서 하나를 고르시오)->"))
+
+                if user_input.isnumeric() == True:
+                    user_input = int(user_input)
+                    user_input = os.listdir("./")[user_input-1]
+                    a.getImageAndTranslate(
+                        user_input, "ddd8494e7e3ce31d9effa2e31be15646", B_lang)
+                elif user_input in quit_list:
+                    break
+                else:
+                    print("다시 입력하세요")
+                    input("")
+                    continue
         elif user_input == 3:  # 3 번째 선택지
-            print("-"*100)
+            print(("-"*100))
             print("결과 문장 언어를 선택합니다")
-            print("1.한국어 2.영어 3.일본어 4.중국어")
-            print("5.베트남어 6.인도네시아어 7.아랍어 8.뱅갈어")
-            print("9.독일어 10.스페인어 11.프랑스어 12.힌디어")
-            print("13.아탈리아어 14.말레이시아어 15.네덜란드어 16.포르투갈어")
-            print("17.러시아어 18.태국어 19.터키어")
+            print("-"*100)
+            print("_"*100)
+            print("|1.한국어 | 2.영어 | 3.일본어 | 4.중국어|")
+            print(("-"*100))
+            print(("_"*100))
+            print("|5.베트남어 | 6.인도네시아어 | 7.아랍어 | 8.뱅갈어|")
+            print("-"*100)
+            print(("_"*100))
+            print("|9.독일어 | 10.스페인어 |11.프랑스어 | 12.힌디어|")
+            print(("-"*100).center(150, " "))
+            print(("_"*100).center(150, " "))
+            print("|13.아탈리아어 | 14.말레이시아어 |15.네덜란드어 | 16.포르투갈어|".center(150, ' '))
+            print(("-"*100).center(150, " "))
+            print(("_"*100).center(150, " "))
+            print("|17.러시아어 | 18.태국어 | 19.터키어|".center(150, ' '))
+            print(("_"*100).center(150, " "))
             try:
-                user_input = int(input("다음중 하나를 고르세요 : "))
+                user_input = int(input("다음중 하나를 고르세요 : ".center(150, ' ')))
                 print("설정이 잘 적용이 될려면 이 프로그램을 다시 시작 하세요")
                 B_lang = choice_lang[user_input-1]
                 settingwriter(B_lang)
@@ -199,7 +225,8 @@ if(Recoder.IsSupport):
                 print("가까이서 말헤보세요")
 else:
     while True:
-        print("당신의 기본 마이크가 조건에 부합하지 않습니다 조건을 보고 이용하시오 \n만약 마이크성능이 부합하면 마이크를 기본마이크로 바꾸시오")
+        print(
+            "당신의 기본 마이크가 조건에 부합하지 않습니다 조건을 보고 이용하시오 \n만약 마이크성능이 조건에 부합하면 마이크를 기본마이크로 바꾸시오")
         print("-"*100)
         print(" _____                           _         _         ")
         print("|_   _|                         | |       | |        ")

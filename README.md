@@ -11,12 +11,14 @@ KR
 
 ## 환경
 
-> window지원
+> window XP SP3 이상
 > PYTHON 3.8.12 이상
 >
 > 안드로이드 미지원
 >
-> ios 미지원
+> OS X MAVERICKS 이상
+>
+> CentOS/RHEL ca-certificates-2015.2.4-65.0.1.el6_6.noarch 등
 >
 > 마이크성능 16000HZ 이상
 
